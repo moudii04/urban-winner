@@ -1,6 +1,5 @@
 import pygame
-from pygame import image
-from pygame.constants import K_SPACE
+from pygame.display import update
 from game import Game
 
 pygame.init()
@@ -30,37 +29,11 @@ while launched:
     # appliquer le background
     screen.blit(bg, (0, -200))
 
-    # appliquer l'image du joueur
-    screen.blit(game.player.image, game.player.rect)
+    if game.is_playing:
+        game.update_game(screen)
 
-    # Dessin barre de vie
-    game.player.max_health_bar(screen)
-    game.player.update_health_bar(screen)
+        # Flip
 
-    # Projectiles UwU
-    for projectile in game.player.all_projectiles:
-        projectile.move()
-        if projectile.rect.x > a:
-            projectile.player.all_projectiles.remove(projectile)
-
-    # Dessin monstre
-    game.all_monsters.draw(screen)
-    for monster in game.all_monsters:
-        monster.forward()
-        monster.max_health_bar(screen)
-        monster.update_health_bar(screen)
-
-    # Dessin projectiles
-    game.player.all_projectiles.draw(screen)
-
-    if 0 < game.player.rect.x < a - game.player.rect.width:
-        game.player.move()
-    elif game.player.rect.x == 0:
-        game.player.rect.x += 2
-    elif game.player.rect.x == a - game.player.rect.width:
-        game.player.rect.x -= 2
-
-    # Flip
     pygame.display.flip()
 
     for event in pygame.event.get():
