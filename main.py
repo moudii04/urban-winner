@@ -20,6 +20,17 @@ screen = pygame.display.set_mode(resolution, pygame.RESIZABLE)
 # Charger le background
 bg = pygame.image.load("C:/Users/EM/Desktop/tuto/assets/back.jpg")
 
+# Charger la bannier
+banner = pygame.image.load("C:/Users/EM/Desktop/tuto/assets/banner2.png")
+banner_rect = banner.get_rect()
+banner_rect.x = screen.get_width()//4 - 50
+# Boutton de lancer
+play_button = pygame.image.load("C:/Users/EM/Desktop/tuto/assets/button.png")
+play_button = pygame.transform.scale(play_button, (400, 150))
+play_button_rect = play_button.get_rect()
+play_button_rect.x = screen.get_width()//3 - 30
+play_button_rect.y = screen.get_height()/2 + 100
+
 # Charger le jeu
 game = Game()
 
@@ -31,6 +42,13 @@ while launched:
 
     if game.is_playing:
         game.update_game(screen)
+    else:
+
+        # appilquer la banner
+        screen.blit(banner, banner_rect)
+
+        # appliquer le bouton
+        screen.blit(play_button, (play_button_rect))
 
         # Flip
 
@@ -46,6 +64,10 @@ while launched:
             if event.key == pygame.K_SPACE:
                 game.player.launch_projectile()
                 i += 1
+
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            if play_button_rect.collidepoint(event.pos):
+                game.start_game()
 
         if event.type == pygame.QUIT:
             launched = False

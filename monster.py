@@ -19,7 +19,11 @@ class Monster(pygame.sprite.Sprite):
         self.health -= amount
         if self.health <= 0:
             self.rect.x = 1000 + random.randint(0, 300)
-            self.health = 100
+            self.health = self.max_health
+
+        if self.game.comet_fall.full_loaded():
+            self.game.all_monsters.remove(self)
+            self.game.comet_fall.attempt_fall()
 
     def update_health_bar(self, surface):
 

@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         self.game = game
         self.health = 100.4
         self.max_health = 100
-        self.attack = 10
+        self.attack = 500
         self.velocity = 2
         self.image = pygame.image.load(
             "C:/Users/EM/Desktop/tuto/assets/player.png")
@@ -56,3 +56,5 @@ class Player(pygame.sprite.Sprite):
     def damage(self, amount):
         if self.health > amount:
             self.health -= amount
+        else:
+            self.game.game_over()
