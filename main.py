@@ -1,17 +1,16 @@
 import pygame
-from pygame.display import update
 from game import Game
 
 pygame.init()
+
+clock = pygame.time.Clock()
+FPS = 60
+
 
 i = 0
 # Generer la fenetre
 a = 1080
 b = 720
-
-arial_font = pygame.font.SysFont("arial", 20)
-white_color = (255, 255, 255)
-
 
 resolution = (a, b)
 pygame.display.set_caption("Tutoriel")
@@ -33,7 +32,6 @@ play_button_rect.y = screen.get_height()/2 + 100
 
 # Charger le jeu
 game = Game()
-
 
 launched = True
 while launched:
@@ -68,6 +66,8 @@ while launched:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             if play_button_rect.collidepoint(event.pos):
                 game.start_game()
+                game.sound.play("click")
+        clock.tick(FPS)
 
         if event.type == pygame.QUIT:
             launched = False

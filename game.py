@@ -1,8 +1,9 @@
 import pygame
 from comet_event import CometEvent
 from player import Player
-from monster import Monster
+from monster import Mummy
 from random import randint
+from sounds import SoundManager
 
 
 class Game:
@@ -13,9 +14,11 @@ class Game:
         self.player = Player(self)
         self.all_players.add(self.player)
         self.all_monsters = pygame.sprite.Group()
-        self.spawn_monster()
-        self.spawn_monster()
+        self.spawn_monster(Mummy)
+        self.spawn_monster(Mummy)
         self.comet_fall = CometEvent(self)
+        self.score = 0
+        self.sound = SoundManager()
 
     def start_game(self):
         self.is_playing = True
@@ -27,10 +30,25 @@ class Game:
         self.comet_fall.reset_percent()
         self.player.health = 100
         self.is_playing = False
+        self.score = 0
+        self.sound.play("end")
+
+    def add_score(self, score_amount):
+        self.score += score_amount
 
     def update_game(self, screen):
+
+        arial_font = pygame.font.SysFont("arial", 20, False, False)
+        score_text = arial_font.render(f"Score : {self.score}", 1, (0, 0, 0))
+
         # appliquer l'image du joueur
         screen.blit(self.player.image, self.player.rect)
+
+        # appliquer le score
+        screen.blit(score_text, (20, 20))
+
+        # Animatio
+        self.player.update_animation()
 
         # Dessin barre de vie
         self.player.max_health_bar(screen)
@@ -50,6 +68,7 @@ class Game:
             monster.forward()
             monster.max_health_bar(screen)
             monster.update_health_bar(screen)
+            monster.update_animation()
 
         # Dessin comete
         self.comet_fall.all_comets.draw(screen)
@@ -66,9 +85,8 @@ class Game:
         elif self.player.rect.x == 1080 - self.player.rect.width:
             self.player.rect.x -= 2
 
-    def spawn_monster(self):
-        monster = Monster(self)
-        self.all_monsters.add(monster)
+    def spawn_monster(self, monster_class_name):
+        self.all_monsters.add(monster_class_name.__call__(self))
 
     def check_collision(self, sprite, group):
         return pygame.sprite.spritecollide(
@@ -76,4 +94,4 @@ class Game:
 
     def spawn_rand_monster(self):
         for x in range(randint(2, 3)):
-            self.spawn_monster()
+            self.spawn_monster(Mummy)

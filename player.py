@@ -1,26 +1,30 @@
 import pygame
 from monster import Monster
 from pro import Projectile
+import animation
 
 
-class Player(pygame.sprite.Sprite):
+class Player(animation.AnimationSprite):
 
     def __init__(self, game):
-        super().__init__()
+        super().__init__("player")
         self.game = game
         self.health = 100.4
         self.max_health = 100
-        self.attack = 500
+        self.attack = 15
         self.velocity = 2
-        self.image = pygame.image.load(
-            "C:/Users/EM/Desktop/tuto/assets/player.png")
         self.rect = self.image.get_rect()
         self.rect.x = 360
         self.rect.y = 500
         self.all_projectiles = pygame.sprite.Group()
 
+    def update_animation(self):
+        self.animate()
+
     def launch_projectile(self):
         self.all_projectiles.add(Projectile(self))
+        self.start_animation()
+        self.game.sound.play("tir")
 
     def move(self):
         keys = pygame.key.get_pressed()
